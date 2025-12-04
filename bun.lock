@@ -2,7 +2,7 @@
   "lockfileVersion": 1,
   "workspaces": {
     "": {
-      "name": "svelte-test",
+      "name": "svelte-tanstack-virtual-sample",
       "dependencies": {
         "@tanstack/svelte-virtual": "^3.13.12",
       },
