@@ -1,30 +1,41 @@
 <script lang="ts">
     import { createVirtualizer } from "@tanstack/svelte-virtual";
+    import type { Readable } from "svelte/store";
+    import type { SvelteVirtualizer } from "@tanstack/svelte-virtual";
 
     let virtualListEl: HTMLDivElement;
 
-    $: rowVirtualizer = createVirtualizer<HTMLDivElement, HTMLDivElement>({
-        count: 10000,
-        getScrollElement: () => virtualListEl,
-        estimateSize: () => 35,
-        overscan: 5,
-    });
+    let rowVirtualizer:
+        | Readable<SvelteVirtualizer<HTMLDivElement, HTMLDivElement>>
+        | undefined = $state();
 
-    $: columnVirtualizer = createVirtualizer<HTMLDivElement, HTMLDivElement>({
-        horizontal: true,
-        count: 10000,
-        getScrollElement: () => virtualListEl,
-        estimateSize: () => 100,
-        overscan: 5,
+    let columnVirtualizer:
+        | Readable<SvelteVirtualizer<HTMLDivElement, HTMLDivElement>>
+        | undefined = $state();
+
+    $effect(() => {
+        rowVirtualizer = createVirtualizer<HTMLDivElement, HTMLDivElement>({
+            count: 10000,
+            getScrollElement: () => virtualListEl,
+            estimateSize: () => 35,
+            overscan: 5,
+        });
+        columnVirtualizer = createVirtualizer<HTMLDivElement, HTMLDivElement>({
+            horizontal: true,
+            count: 10000,
+            getScrollElement: () => virtualListEl,
+            estimateSize: () => 100,
+            overscan: 5,
+        });
     });
 </script>
 
 <div class="list scroll-container" bind:this={virtualListEl}>
     <div
-        style="position: relative; height: {$rowVirtualizer.getTotalSize()}px; width: {$columnVirtualizer.getTotalSize()}px;"
+        style="position: relative; height: {$rowVirtualizer?.getTotalSize()}px; width: {$columnVirtualizer?.getTotalSize()}px;"
     >
-        {#each $rowVirtualizer.getVirtualItems() as row (row.index)}
-            {#each $columnVirtualizer.getVirtualItems() as col (col.index)}
+        {#each $rowVirtualizer?.getVirtualItems() as row (row.index)}
+            {#each $columnVirtualizer?.getVirtualItems() as col (col.index)}
                 <div
                     class={col.index % 2
                         ? row.index % 2 === 0
