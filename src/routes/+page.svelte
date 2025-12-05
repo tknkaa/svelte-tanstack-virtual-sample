@@ -70,7 +70,7 @@
         >
           <Cell
             bind:cell={
-              () => getCell(row.index, col.index), (cell) => setCell(cell)
+              () => getCell(col.index, row.index), (cell) => setCell(cell)
             }
           />
         </div>
